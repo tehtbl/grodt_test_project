@@ -1,0 +1,31 @@
+stages:
+  - lint
+  - test
+
+variables:
+  CELERY_BROKER_URL: 'redis://redis:6379/0'
+
+flake8:
+  stage: lint
+  image: python:3.7-alpine
+  before_script:
+    - pip install -q flake8
+  script:
+    - flake8
+
+pytest:
+  stage: test
+  image: python:3.7
+  image: docker/compose:latest
+  tags:
+    - docker
+  services:
+    - docker:dind
+  before_script:
+    - docker-compose -f docker-compose-devel.yml build
+    # Ensure celerybeat does not crash due to non-existent tables
+    - docker-compose -f docker-compose-devel.yml run --rm django python manage.py migrate
+    - docker-compose -f docker-compose-devel.yml up -d
+  script:
+    - docker-compose -f docker-compose-devel.yml run django collectstatic --noinput
+    - docker-compose -f docker-compose-devel.yml run django pytest

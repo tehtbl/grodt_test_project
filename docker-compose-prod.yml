@@ -1,0 +1,37 @@
+version: '3'
+
+# volumes:
+#   grodt_test_project_prod_db_data: {}
+#   grodt_test_project_prod_db_data_backups: {}
+
+services:
+  django: &django
+    build:
+      context: .
+      dockerfile: ./compose/prod/django/Dockerfile
+    image: grodt_test_project_prod_django
+    depends_on:
+      - redis
+    env_file:
+      - ./.envs/prod
+    command: /start
+    ports:
+      - "127.0.0.1:8000:8000"
+
+  redis:
+    image: redis:5.0
+
+  celeryworker:
+    <<: *django
+    image: grodt_test_project_prod_celeryworker
+    command: /start-celeryworker
+
+  celerybeat:
+    <<: *django
+    image: grodt_test_project_prod_celerybeat
+    command: /start-celerybeat
+
+  flower:
+    <<: *django
+    image: grodt_test_project_prod_flower
+    command: /start-flower

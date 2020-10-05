@@ -1,0 +1,13 @@
+.login-error {
+    margin: 20px auto;
+    max-width: 300px;
+}
+
+form.login-form div.checkbox button.btn {
+    margin-bottom: 20px;
+}
+
+.login-form .form-group div.checkbox label {
+    padding-top: 0;
+    padding-bottom: 10px;
+}

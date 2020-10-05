@@ -1,0 +1,64 @@
+
+{% extends '_base.html' %}
+
+{% load i18n %}
+{% load static %}
+{% load lib_tags %}
+
+{% block pagetitle %}MyNewAppModels Overview{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3">
+        <div class="row align-items-center">
+            <div class="col-auto">
+                <h2 class="page-title">
+                    {% trans "List of MyNewAppModels" %}
+                </h2>
+            </div>
+        </div>
+
+        <div class="btn-toolbar mb-2 mb-md-0" style="margin-right: -7px;">
+            <div class="btn-group mr-2">
+                {% if perms.mynewapp.add_mynewappmodel %}
+                    <a class="btn btn-sm btn-outline-secondary" href="{% url 'mynewapp:mynewappmodel_create' %}">
+                        <span data-feather="plus"></span> {% trans "Add" %}
+                    </a>
+                {% endif %}
+                <!-- <button class="btn btn-sm btn-outline-secondary">Import</button> -->
+                <!-- <button class="btn btn-sm btn-outline-secondary">Export</button> -->
+            </div>
+        </div>
+    </div>
+
+    <div class="box">
+        <div class="card">
+            <div class="table-responsive">
+                <table class="table table-vcenter card-table table-striped">
+                    <thead>
+                    <tr>
+                        <th>{% trans "Name" %}</th>
+                        <th id="tags" class="sortable" data-sort_order="tags">{% trans "Tags" %}</th>
+                        <th class="w-2"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for obj in my_mynewappmodels %}
+                        <tr id="{{ obj.uuidpk }}" class="{% if not obj.enabled %}text-muted{% endif %}">
+                            <td><a href="{% url 'mynewapp:mynewappmodel_edit' obj.uuidpk %}">{{ obj }}</a>{% if not obj.enabled %} ({% trans "disabled" %}){% endif %}</td>
+                            <td>{% render_tags obj.tags %}</td>
+                            <td class="text-nowrap">
+                                <a href="{% url 'mynewapp:mynewappmodel_delete' obj.uuidpk %}" title="Delete {{ obj }}" class="">
+                                    <i data-feather="trash-2" width="14" height="14"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

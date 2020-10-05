@@ -1,0 +1,59 @@
+"""Factories for core application."""
+
+import factory
+from django.contrib.auth.models import Group
+from factory.django import DjangoModelFactory
+from users.models import MyUser
+
+
+class PermissionFactory(DjangoModelFactory):
+    """A base factory to handle permissions."""
+
+    class Meta(object):
+        abstract = True
+
+    @factory.post_generation
+    def set_permission(self, create, extracted, **kwargs):
+        if not create:
+            return
+        self.post_create(MyUser.objects.filter(is_superuser=True).first())
+
+
+class GroupFactory(DjangoModelFactory):
+    """A factory to create Group instances."""
+
+    class Meta(object):
+        model = Group
+
+    name = "DefaultGroup"
+
+
+class UserFactory(PermissionFactory):
+    """A factory to create User instances."""
+
+    class Meta(object):
+        model = MyUser
+        django_get_or_create = ("username",)
+
+    email = factory.LazyAttribute(lambda a: a.username)
+    password = "{PLAIN}toto"
+
+    @factory.post_generation
+    def groups(self, create, extracted, **kwargs):
+        if not create:
+            return
+
+        if extracted:
+            for group in extracted:
+                self.groups.add(Group.objects.get(name=group))
+
+
+# class LogFactory(factory.DjangoModelFactory):
+#     """Factory for Log."""
+#
+#     class Meta(object):
+#         model = models.Log
+#
+#     logger = "core.admin"
+#     message = "A message"
+#     level = "info"

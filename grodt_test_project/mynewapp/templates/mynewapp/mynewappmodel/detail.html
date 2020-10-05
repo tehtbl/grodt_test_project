@@ -1,0 +1,106 @@
+
+{% extends '_base.html' %}
+
+{% load i18n %}
+{% load static %}
+{% load lib_tags %}
+
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+
+{% block pagetitle %}MyNewAppModel Details{% endblock %}
+
+{% block extra_css %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/jquery.sortable.css' %}"/>
+{% endblock %}
+
+{% block extra_js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'js/jquery.sortable.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/jquery.infinitescroll.js' %}"></script>
+    <script type="text/javascript">
+        // TBD
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+    <h2>{% trans "MyNewAppModel Details for" %} ``{{ object }}'' {% if not object.enabled %} <small>{% trans "(disabled)" %}</small>{% endif %}</h2>
+    <hr>
+
+    {#    <div class="col-xs-12 col-sm-6" style="margin-left: -15px;">#}
+    <div class="col-xs-12 col-sm-6">
+
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">{% trans "Summary" %}</h3>
+            </div>
+            <table class="table">
+                <tr>
+                    <th width="40%">{% trans "Creation date" %}</th>
+                    <td>{{ object.creation }}</td>
+                </tr>
+                <tr>
+                    <th>{% trans "Last modification date" %}</th>
+                    <td>{{ object.last_modification }}</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    {% trans "Names" %}
+                </h3>
+            </div>
+            <table class="table">
+                <tr>
+                    <th width="40%">{% trans "MyNewAppModel Name" %}</th>
+                    <td>{{ object.name }}</td>
+                </tr>
+
+            </table>
+        </div>
+
+        {% for template in templates.left %}
+            {% include template %}
+        {% endfor %}
+    </div>
+
+    <div class="col-xs-12 col-sm-6">
+
+        <div class="panel panel-info">
+            <div class="panel-heading"><h3 class="panel-title">{% trans "Administrators" %}</h3></div>
+            <table id="domadmins" class="table">
+                <thead>
+                <tr>
+                    <th>{% trans "Username" %}</th>
+                    <th>{% trans "Name" %}</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for da in object.admins %}
+                    <tr>
+                        <td>{{ da.username }}</td>
+                        <td>{{ da.fullname }}</td>
+                        <td name="actions">
+                            {% if perms.admin.change_mynewappmodel %}
+                                <a name="removeperm" href="{% url 'admin:permission_remove' %}?domid={{ object.uuidpk }}&daid={{ da.uuidpk }}" title="{% trans 'Remove this permission' %}">
+                                    <span class="fa fa-trash"></span>
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">{% trans "No administrator defined yet." %}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    </div>
+{% endblock %}
