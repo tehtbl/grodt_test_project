@@ -1,8 +1,8 @@
 version: '3'
 
-volumes:
-  devel_db_data: {}
-  devel_db_data_backups: {}
+#volumes:
+#  devel_db_data: {}
+#  devel_db_data_backups: {}
 
 services:
 
@@ -48,7 +48,7 @@ services:
     container_name: celerybeat
     depends_on:
       - redis
-      - mailhog
+      - celeryworker
     ports: []
     command: /start-celerybeat
 
@@ -56,6 +56,9 @@ services:
     <<: *django
     image: grodt_test_project_devel_flower
     container_name: flower
+    depends_on:
+      - redis
+      - celeryworker
     ports:
       - "127.0.0.1:5555:5555"
     command: /start-flower

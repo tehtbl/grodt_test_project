@@ -57,3 +57,6 @@ redis==3.5.3  # https://github.com/andymccurdy/redis-py
 requests==2.24.0
 # whitenoise==5.1.0
 whitenoise==5.2.0  # https://github.com/evansd/whitenoise
+
+
+bitcoinaddress==0.1.1

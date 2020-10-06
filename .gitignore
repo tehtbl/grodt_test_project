@@ -336,3 +336,4 @@ db.sqlite3
 .idea/inspectionProfiles/
 !grodt_test_project/lib/
 grodt_test_project/staticfiles/
+.idea/

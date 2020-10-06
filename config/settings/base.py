@@ -207,7 +207,6 @@ STATICFILES_FINDERS = [
 # STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 STATICFILES_STORAGE = "config.storage.MyWhiteNoiseStaticFilesStorage"
 
-
 # MEDIA
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#media-root
@@ -246,7 +245,6 @@ TEMPLATES = [
         },
     }
 ]
-
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#form-renderer
 FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
@@ -336,6 +334,13 @@ CELERY_TASK_SOFT_TIME_LIMIT = 60
 # http://docs.celeryproject.org/en/latest/userguide/configuration.html#beat-scheduler
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
+CELERY_BEAT_SCHEDULE = {
+    'check-btc-wallet-every-3-second': {
+        'task': 'grodt_test_project.mynewapp.tasks.check_btc_wallet',
+        'schedule': 3.0,
+    },
+}
+
 # django-allauth
 # ------------------------------------------------------------------------------
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
@@ -360,7 +365,6 @@ ACCOUNT_FORMS = {
 ACCOUNT_ALLOW_REGISTRATION = env.bool("DJANGO_ACCOUNT_ALLOW_REGISTRATION", True)
 ACCOUNT_ADAPTER = "grodt_test_project.users.adapters.AccountAdapter"
 SOCIALACCOUNT_ADAPTER = "grodt_test_project.users.adapters.SocialAccountAdapter"
-
 
 # django-rest-framework
 # -------------------------------------------------------------------------------

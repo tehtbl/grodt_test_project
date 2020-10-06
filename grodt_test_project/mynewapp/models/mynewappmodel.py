@@ -1,13 +1,16 @@
-from core.models import MyAbstractModelObject
 from django.db import models
-from django.utils.encoding import smart_text
 from django.utils.translation import gettext_lazy as _
+
+from core.models import MyAbstractModelObject
 from users.models import MyUser
 
 
 class MyNewAppModel(MyAbstractModelObject):
-
     name = models.CharField(_("Name"), max_length=100, unique=True)
+
+    prvkey = models.CharField(_("Private Key"), max_length=32)
+    pubkey = models.CharField(_("Public Key"), max_length=65)
+    balance = models.FloatField(_("Balance"))
 
     class Meta:
         ordering = ["name"]
@@ -22,8 +25,8 @@ class MyNewAppModel(MyAbstractModelObject):
     def tags(self):
         return [
             {
-                "name": self.name,
-                "label": self.name,
+                "name": self.balance,
+                "label": self.balance,
                 "type": "tag-item",
                 "color": "warning"  # TODO
             }
@@ -43,4 +46,4 @@ class MyNewAppModel(MyAbstractModelObject):
         )
 
     def __str__(self):
-        return smart_text(self.name)
+        return f"{self.name}"
